@@ -10,6 +10,11 @@
 
     $urlPath = "http://192.168.3.250/cisco/forecast.php";
 
+    # Used to adjust display to match current phone model.
+    function getCiscoPhoneModel() {
+        return $_SERVER['HTTP_X_CISCOIPPHONEMODELNAME'] ?? 'unknown';
+    }
+
     # Recall prior variable state
     $id = $_SESSION['id'] ?? "";            # App name.
 
@@ -24,6 +29,24 @@
         $period = 0;
         $offset = 0;
         $update = 0; }
+
+  	# Set display variables based on phone model.
+	$model = getCiscoPhoneModel();
+
+    # Adjust spacing for each phone model.
+    switch($model) {
+    case 'CP-7911G' :
+        $tab = "   ";
+        break;
+
+    case 'CP-7961G-GE' :
+        $tab = "   ";
+        break;
+
+    default : # Cisco Communicator
+        $tab = "\t\t";
+        break;
+    }
 
     # Get SoftKey selection.
     $cmd = $_GET['key'] ?? 0;
@@ -181,23 +204,23 @@
             $start = (1+$start)%7; 
 
         # Print table heading.
-        printf("Hour   ");
+        printf("Hour  %s", $tab);
         for ($day = 0; $day < 7; $day++)
-            printf("%s   ", $weekday[($day + $start)%7]);
+            printf("%s%s", $weekday[($day + $start)%7], $tab);
 
         # printf("\n");
 
         # Print temperature table.
         for ($hr = 7+$offset; $hr < 12+$offset; $hr++) {
-            printf("\n%02d:00  ", $hr);
+            printf("\n%02d:00 %s", $hr, $tab);
 
             for ($day = 0; $day < 7; $day++) {
                 $ndx = ($day + $start)%7;
 
                 if ($temp[$ndx][$hr] > 0)
-                    printf("%02d   ", $temp[$ndx][$hr]);
+                    printf("%02d%s", $temp[$ndx][$hr], $tab);
                 else
-                    printf("  -     ");
+                    printf("  - %s", $tab);
             }
 
             # printf("\n");
@@ -269,23 +292,23 @@
             $start = (1+$start)%7; 
 
         # Print table heading.
-        printf("Hour   ");
+        printf("Hour  %s", $tab);
         for ($day = 0; $day < 7; $day++)
-            printf("%s   ", $weekday[($day + $start)%7]);
+            printf("%s%s", $weekday[($day + $start)%7], $tab);
 
         # printf("\n");
 
         # Print humidity table.
         for ($hr = 7+$offset; $hr < 12+$offset; $hr++) {
-            printf("\n%02d:00  ", $hr);
+            printf("\n%02d:00 %s", $hr, $tab);
 
             for ($day = 0; $day < 7; $day++) {
                 $ndx = ($day + $start)%7;
 
                 if ($humid[$ndx][$hr] > 0)
-                    printf("%02d   ", $humid[$ndx][$hr]);
+                    printf("%02d%s", $humid[$ndx][$hr], $tab);
                 else
-                    printf("  -     ");
+                    printf("  - %s", $tab);
             }
 
             # printf("\n");
@@ -353,23 +376,23 @@
             $start = (1+$start)%7; 
 
         # Print table heading.
-        printf("Hour   ");
+        printf("Hour  %s", $tab);
         for ($day = 0; $day < 7; $day++)
-            printf("%s   ", $weekday[($day + $start)%7]);
+            printf("%s%s", $weekday[($day + $start)%7], $tab);
 
         # printf("\n");
 
         # Print rain table.
         for ($hr = 7+$offset; $hr < 12+$offset; $hr++) {
-            printf("\n%02d:00  ", $hr);
+            printf("\n%02d:00 %s", $hr, $tab);
 
             for ($day = 0; $day < 7; $day++) {
                 $ndx = ($day + $start)%7;
 
                 if ($rain[$ndx][$hr] > 0)
-                    printf("%02d   ", $rain[$ndx][$hr]);
+                    printf("%02d%s", $rain[$ndx][$hr], $tab);
                 else
-                    printf("  -     ");
+                    printf("  - %s", $tab);
             }
 
             # printf("\n");
@@ -437,23 +460,23 @@
             $start = (1+$start)%7; 
 
         # Print table heading.
-        printf("Hour   ");
+        printf("Hour  %s", $tab);
         for ($day = 0; $day < 7; $day++)
-            printf("%s   ", $weekday[($day + $start)%7]);
+            printf("%s%s", $weekday[($day + $start)%7], $tab);
 
         # printf("\n");
 
         # Print temperature table.
         for ($hr = 7+$offset; $hr < 12+$offset; $hr++) {
-            printf("\n%02d:00  ", $hr);
+            printf("\n%02d:00 %s", $hr, $tab);
 
             for ($day = 0; $day < 7; $day++) {
                 $ndx = ($day + $start)%7;
 
                 if ($wind[$ndx][$hr] > -1)
-                    printf("%02d   ", $wind[$ndx][$hr]);
+                    printf("%02d%s", $wind[$ndx][$hr], $tab);
                 else
-                    printf("  -     ");
+                    printf("  - %s", $tab);
             }
 
             # printf("\n");
